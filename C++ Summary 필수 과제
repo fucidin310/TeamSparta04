@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Book {
+public:
+	string title;
+	string author;
+
+	Book(string title, string author) {
+		this->title = title;
+		this->author = author;
+	}
+};
+
+class BookManager {
+private:
+	vector<Book> books;
+
+public:
+	void addBook(string title, string author) {
+		books.push_back(Book(title, author));
+	}
+
+	void displayAllBooks() {
+		for (int i = 0; i < books.size(); i++) {
+			cout << "title : " << books[i].title << ", author : " << books[i].author << endl;
+		}
+	}
+
+	void searchByTitle(string title) {
+		bool flag = false;
+
+		for (int i = 0; i < books.size(); i++) {
+			if (books[i].title == title) {
+				cout << "title : " << books[i].title << ", author : " << books[i].author << endl;
+				flag = true;
+			}
+		}
+
+		if (!flag) {
+			cout << "해당 제목의 책이 존재하지 않습니다." << title << endl;
+		}
+
+		cout << endl;
+	}
+
+	void searchByAuthor(string author) {
+		bool flag = false;
+
+		for (int i = 0; i < books.size(); i++) {
+			if (books[i].author == author) {
+				cout << "title : " << books[i].title << ", author : " << books[i].author << endl;
+				flag = true;
+			}
+		}
+
+		if (!flag) {
+			cout << "해당 작가의 책이 존재하지 않습니다." << author << endl;
+		}
+
+		cout << endl;
+	}
+};
+
+int main() {
+	BookManager bookManager;
+	bookManager.addBook("C++ Programming", "John Doe");
+	bookManager.addBook("Java Programming", "John Doe");
+	bookManager.addBook("Python Programming", "Alice Doe");
+
+	bookManager.displayAllBooks();
+	cout << endl;
+
+	bookManager.searchByTitle("C++ Programming");
+	bookManager.searchByTitle("Java Programming");
+	bookManager.searchByTitle("Python Programming");
+	bookManager.searchByTitle("Ruby Programming");
+	cout << endl;
+
+	bookManager.searchByAuthor("John Doe");
+	bookManager.searchByAuthor("Alice Doe");
+	bookManager.searchByAuthor("Bob Doe");
+
+	return 0;
+}
