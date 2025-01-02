@@ -1,0 +1,113 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+class Book {
+public:
+	string title;
+	string author;
+
+	Book(string title, string author) {
+		this->title = title;
+		this->author = author;
+	}
+};
+
+class BorrowManager {
+private:
+	unordered_map<string, int> stock;
+
+public:
+
+
+	void initializeStock(Book book, int quantity = 3) {
+		stock[book.title] = quantity;
+	}
+
+	bool borrowBook(string title) {
+		bool flag = false;
+
+		if (stock[title] > 0) {
+			stock[title]--;
+			cout << title << "책을 대여하였습니다." << endl;
+			flag = true;
+		}
+		else {
+			cout << "해당 책은 모두 대여중입니다." << endl;
+		}
+
+		return flag;
+	}
+
+	void returnBook(string title) {
+		stock[title]++;
+		cout << title << "책을 반납하였습니다." << endl;
+	}
+
+	void displayStock() {
+		for (auto it = stock.begin(); it != stock.end(); it++) {
+			cout << "title : " << it->first << ", quantity : " << it->second << endl;
+		}
+		cout << endl;
+	}
+};
+
+class BookManager {
+private:
+	vector<Book> books;
+
+public:
+	void addBook(string title, string author) {
+		Book book = Book(title, author);
+		books.push_back(book);
+	}
+
+	void displayAllBooks() {
+		for (int i = 0; i < books.size(); i++) {
+			cout << "title : " << books[i].title << ", author : " << books[i].author << endl;
+		}
+	}
+
+	Book* getBookByTitle(string title) {
+		for(int i = 0; i < books.size(); i++) {
+			if(books[i].title == title) {
+				return &books[i];
+			}
+		}
+
+		return nullptr;
+	}
+
+	Book* getBookByAuthor(string author) {
+		for (int i = 0; i < books.size(); i++) {
+			if (books[i].author == author) {
+				return &books[i];
+			}
+		}
+
+		return nullptr;
+	}
+};
+
+int main() {
+	BookManager bookManager;
+	BorrowManager borrowManager;
+
+	bookManager.addBook("Harry Potter", "J.K. Rowling");
+	bookManager.addBook("The Lord of the Rings", "J.R.R. Tolkien");
+	bookManager.addBook("The Da Vinci Code", "Dan Brown");
+
+	borrowManager.initializeStock(*bookManager.getBookByTitle("Harry Potter"));
+	borrowManager.initializeStock(*bookManager.getBookByTitle("The Lord of the Rings"));
+	borrowManager.initializeStock(*bookManager.getBookByTitle("The Da Vinci Code"));
+
+	borrowManager.borrowBook("Harry Potter");
+	borrowManager.borrowBook(bookManager.getBookByAuthor("J.K. Rowling")->title);
+	borrowManager.borrowBook("Harry Potter");
+	borrowManager.borrowBook(bookManager.getBookByAuthor("J.K. Rowling")->title);
+
+	borrowManager.returnBook("Harry Potter");
+	borrowManager.borrowBook(bookManager.getBookByAuthor("J.K. Rowling")->title);
+	borrowManager.returnBook("Harry Potter");
+}
